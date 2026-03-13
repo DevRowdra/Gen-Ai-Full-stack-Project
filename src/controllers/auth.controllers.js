@@ -3,6 +3,7 @@ const sendResponse = require("../utils/response");
 const userModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const AppError = require("../utils/AppError");
+const tokenBlacklistModel = require("../models/blacklist.model");
 /**
  * @name registerUserController
  * @description register a new user ,expects name,email,password in the request body
@@ -172,12 +173,29 @@ async function loginUserController(req, res) {
 async function logoutUserController(req, res) {
   const token = req.cookies.token;
   if (token) {
-    await tokenBlacklitistModel.create({ token });
+    await tokenBlacklistModel.create({ token });
   }
   res.clearCookie("token");
   return sendResponse(res, 200, "Logout successful", null);
 }
+/**
+ * @name getMeController
+ * @description get the details of the logged in user, expects token in the cookies
+ * @route GET /api/auth/get-me
+ * @access private  
+ * @param {*} req 
+ * @param {*} res 
+ */
+async function getMeController(req, res) {
+const user= await userModel.findById(req.user.id).select("-password");
+return sendResponse(res, 200, "User details fetched successfully", {
+  user:{
+    id: user._id,
+    username: user.username,
+    email: user.email,
+  }});
+}
 module.exports = {
   registerUserController,
-  loginUserController,logoutUserController
+  loginUserController,logoutUserController,getMeController
 };

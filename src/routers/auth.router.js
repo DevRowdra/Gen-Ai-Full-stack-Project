@@ -1,5 +1,6 @@
 const {Router} = require('express');
-const { registerUserController, loginUserController } = require('../controllers/auth.controllers');
+const { registerUserController, loginUserController, logoutUserController, getMeController } = require('../controllers/auth.controllers');
+const { authUser } = require('../middleware/auth.middleware');
 const authRouter = Router();
 
 /**
@@ -19,5 +20,12 @@ authRouter.post('/register',registerUserController );
  * @description clear token  from user cookies and add the token to blacklist
  * @access public
  */
-authRouter.get('/logout', )
+authRouter.get('/logout',logoutUserController )
+
+/**
+ * @route GET /api/auth/get-me
+ * @description get the details of the logged in user
+ * @access private
+ */
+authRouter.get('/get-me',authUser,getMeController)
 module.exports = authRouter;

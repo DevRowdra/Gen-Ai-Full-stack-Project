@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 // required all the routes here
 const authRouter = require("./routers/auth.router");
 const globalErrorHandler = require("./middleware/globalErrorHandler.middleware");
