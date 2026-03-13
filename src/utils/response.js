@@ -1,3 +1,13 @@
+/**
+ *
+ * @param {*} res
+ * @param {*} statusCode
+ * @param {*} message
+ * @param {*} data
+ * @param {{}} meta
+ * @returns
+ */
+
 const sendResponse = (res, statusCode, message, data = null, meta = {}) => {
   return res.status(statusCode).json({
     success: statusCode < 400,
