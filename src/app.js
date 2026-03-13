@@ -10,7 +10,9 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 
 
-
+app.get("/health", (req, res) => {
+  res.send("Welcome to the API");
+});
 // global error handling middleware
 app.use(globalErrorHandler);
 module.exports = app;

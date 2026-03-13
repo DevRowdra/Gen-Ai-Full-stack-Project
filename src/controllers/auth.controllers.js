@@ -14,16 +14,23 @@ const AppError = require("../utils/AppError");
 
 async function registerUserController(req, res) {
   const { username, email, password } = req.body;
+  console.log(username, email, password);
+
   // Basic validation of name email and password
   if (!username || !email || !password) {
-    sendResponse(res, 400, "Name, email and password are required", null);
+    return sendResponse(
+      res,
+      400,
+      "Name, email and password are required",
+      null,
+    );
   }
   const isUserAlreadyExists = await userModel.findOne({
     $or: [{ email }, { username }],
   });
   // Check if a user with the same email or username already exists
   if (isUserAlreadyExists) {
-    sendResponse(
+    return sendResponse(
       res,
       400,
       "User with the same email or username already exists",
@@ -43,7 +50,7 @@ async function registerUserController(req, res) {
     { expiresIn: "7d" },
   );
   res.cookie("token", token);
-  sendResponse(res, 201, "User registered successfully", {
+  return sendResponse(res, 201, "User registered successfully", {
     data: {
       id: user._id,
       username: user.username,
@@ -94,8 +101,8 @@ async function loginUserController(req, res) {
   /**
    * 5️⃣ Find user by email
    */
-  const user = await userModel.findUnique({
-    where: { email },
+  const user = await userModel.findOne({
+    email,
   });
 
   /**
@@ -153,7 +160,24 @@ async function loginUserController(req, res) {
     },
   });
 }
+/**
+ * @name logoutUserController
+ * @description clear token  from user cookies and add the token to blacklist
+ * @route GET /api/auth/logout
+ * @access public
+ * @param {} req
+ * @param {*} res
+ * @returns
+ */
+async function logoutUserController(req, res) {
+  const token = req.cookies.token;
+  if (token) {
+    await tokenBlacklitistModel.create({ token });
+  }
+  res.clearCookie("token");
+  return sendResponse(res, 200, "Logout successful", null);
+}
 module.exports = {
   registerUserController,
-  loginUserController,
+  loginUserController,logoutUserController
 };
