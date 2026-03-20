@@ -52,7 +52,7 @@ async function registerUserController(req, res) {
   );
   res.cookie("token", token);
   return sendResponse(res, 201, "User registered successfully", {
-    data: {
+    user: {
       id: user._id,
       username: user.username,
       email: user.email,
@@ -182,20 +182,24 @@ async function logoutUserController(req, res) {
  * @name getMeController
  * @description get the details of the logged in user, expects token in the cookies
  * @route GET /api/auth/get-me
- * @access private  
- * @param {*} req 
- * @param {*} res 
+ * @access private
+ * @param {*} req
+ * @param {*} res
  */
 async function getMeController(req, res) {
-const user= await userModel.findById(req.user.id).select("-password");
-return sendResponse(res, 200, "User details fetched successfully", {
-  user:{
-    id: user._id,
-    username: user.username,
-    email: user.email,
-  }});
+  const user = await userModel.findById(req.user.id).select("-password");
+  console.log(user);
+  return sendResponse(res, 200, "User details fetched successfully", {
+    user: {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+    },
+  });
 }
 module.exports = {
   registerUserController,
-  loginUserController,logoutUserController,getMeController
+  loginUserController,
+  logoutUserController,
+  getMeController,
 };
