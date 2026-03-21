@@ -13,10 +13,12 @@ app.use(
 // required all the routes here
 const authRouter = require("./routers/auth.router");
 const globalErrorHandler = require("./middleware/globalErrorHandler.middleware");
+const interviewRouter = require("./routers/interview.router");
 
 app.use(express.json());
 // use all the routes here
 app.use("/api/auth", authRouter);
+app.use("/api/interview", interviewRouter);
 
 app.get("/health", (req, res) => {
   res.send("Welcome to the API");

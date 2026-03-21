@@ -108,7 +108,7 @@ Return ONLY valid JSON.
     console.log(parsed);
     return parsed;
   } catch (error) {
-    console.error("❌ Raw AI Response:", response.text);
+    console.error("Raw AI Response:", response.text);
     throw new Error("Failed to parse AI response");
   }
 }
